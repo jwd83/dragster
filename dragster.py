@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import math
+import time
 
 # Constants
 SCREEN_WIDTH = 1280
@@ -22,6 +23,7 @@ MASS = CAR_WEIGHT / 32.174  # convert to slugs
 MAX_RPM = 7400
 MIN_RPM = 2000
 QUARTER_MILE_FEET = 1320  # 1/4 mile in feet
+TIME_START = time.time()
 
 
 def calculate_rpm(speed_fps, gear):
@@ -55,6 +57,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Drag Racing Simulator")
     clock = pygame.time.Clock()
+    font = pygame.font.SysFont("Arial", 24)
 
     track_x = (SCREEN_WIDTH - TRACK_LENGTH_PX) // 2
     track_y = (SCREEN_HEIGHT - TRACK_HEIGHT_PX) // 2
@@ -68,6 +71,7 @@ def main():
     while running:
         dt = clock.tick(60) / 1000.0
 
+        # Event handling
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
@@ -81,26 +85,46 @@ def main():
             elif event.type == KEYUP and event.key == K_UP:
                 throttle = False
 
+        # Physics calculations
+        rpm = calculate_rpm(speed_fps, current_gear)
+        rpm = max(0, min(rpm, MAX_RPM))
+
         if throttle:
-            rpm = calculate_rpm(speed_fps, current_gear)
-            rpm = max(0, min(rpm, MAX_RPM))
             torque = calculate_torque(rpm)
             force = calculate_force(torque, current_gear)
             speed_fps += (force / MASS) * dt
 
         position_ft += speed_fps * dt
         if position_ft >= QUARTER_MILE_FEET:
-            print("Race Over!")
+            print(f"Race Over! Time: {time.time() - TIME_START:.2f} seconds")
             running = False
 
+        # Convert speed to MPH
+        speed_mph = speed_fps * 0.681818  # fps to mph
+
+        # Drawing
         screen.fill(BG_COLOR)
         pygame.draw.rect(
             screen, TRACK_COLOR, (track_x, track_y, TRACK_LENGTH_PX, TRACK_HEIGHT_PX)
         )
 
+        # Draw car
         car_x = track_x + (position_ft / QUARTER_MILE_FEET) * TRACK_LENGTH_PX
         car_y = track_y + (TRACK_HEIGHT_PX - CAR_SIZE) // 2
         pygame.draw.rect(screen, CAR_COLOR, (car_x, car_y, CAR_SIZE, CAR_SIZE))
+
+        # Draw text readouts
+        text_y = 10
+        readouts = [
+            f"RPM: {int(rpm)}",
+            f"Gear: {current_gear}",
+            f"Speed: {speed_mph:.1f} mph",
+        ]
+
+        for text in readouts:
+            text_surface = font.render(text, True, (255, 255, 255))
+            screen.blit(text_surface, (10, text_y))
+            text_y += 30
 
         pygame.display.flip()
 
