@@ -39,7 +39,8 @@ def calculate_torque(rpm):
     if rpm < MIN_RPM:
         return 108.0
     elif rpm > MAX_RPM:
-        return (150 * 5252) / MAX_RPM  # ~106.46 ft-lb
+        return 0
+        # return (150 * 5252) / MAX_RPM  # ~106.46 ft-lb
     else:
         x = (rpm - MIN_RPM) / (MAX_RPM - MIN_RPM)
         return 108.0 - x * (108.0 - 106.46)
@@ -87,7 +88,7 @@ def main():
 
         # Physics calculations
         rpm = calculate_rpm(speed_fps, current_gear)
-        rpm = max(0, min(rpm, MAX_RPM))
+        # rpm = max(0, min(rpm, MAX_RPM))
 
         if throttle:
             torque = calculate_torque(rpm)
