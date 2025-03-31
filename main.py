@@ -54,6 +54,7 @@ def calculate_force(torque, gear):
 
 
 def main():
+
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Drag Racing Simulator")
@@ -78,26 +79,62 @@ def main():
     state = STATE_RACING
     running = True
     while running:
+        dt = clock.tick(60) / 1000.0
 
-        if state == STATE_STAGING:
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                running = False
 
-            pass
-        if state == STATE_RACING:
-            dt = clock.tick(60) / 1000.0
+            if state == STATE_RACING:
 
-            # Event handling
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    running = False
-                elif event.type == KEYDOWN:
+                if event.type == KEYDOWN:
                     if event.key == K_UP:
                         throttle = True
+                        if reaction_time == 0.0:
+                            reaction_time = time.time() - TIME_START
                     elif event.key == K_LEFT and current_gear > 1:
                         current_gear -= 1
                     elif event.key == K_RIGHT and current_gear < 5:
                         current_gear += 1
                 elif event.type == KEYUP and event.key == K_UP:
                     throttle = False
+
+        if state == STATE_STAGING:
+            pass
+        elif state == STATE_RESULTS:
+            # Display results
+            screen.fill(BG_COLOR)
+            text_surface = font.render(
+                f"Reaction Time: {reaction_time:.2f} seconds", True, (255, 255, 255)
+            )
+            screen.blit(text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2))
+            text_surface = font.render(
+                f"Quarter Mile Time: {quarter_mile_time:.2f} seconds",
+                True,
+                (255, 255, 255),
+            )
+            screen.blit(
+                text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 30)
+            )
+            text_surface = font.render(
+                f"Quarter Mile Speed: {quarter_mile_speed:.2f} mph",
+                True,
+                (255, 255, 255),
+            )
+            screen.blit(
+                text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 60)
+            )
+            text_surface = font.render(
+                "Travel Time: {:.2f} seconds".format(quarter_mile_time - reaction_time),
+                True,
+                (255, 255, 255),
+            )
+            screen.blit(
+                text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 90)
+            )
+
+        elif state == STATE_RACING:
 
             # Physics calculations
             rpm = calculate_rpm(speed_fps, current_gear)
@@ -110,8 +147,12 @@ def main():
 
             position_ft += speed_fps * dt
             if position_ft >= QUARTER_MILE_FEET:
+                state = STATE_RESULTS
+                quarter_mile_time = time.time() - TIME_START
+                quarter_mile_speed = speed_fps * 0.681818  # fps to mph
+
                 print(f"Race Over! Time: {time.time() - TIME_START:.2f} seconds")
-                running = False
+                # running = False
 
             # Convert speed to MPH
             speed_mph = speed_fps * 0.681818  # fps to mph
@@ -133,8 +174,8 @@ def main():
             text_y = 10
             readouts = [
                 f"RPM: {int(rpm)}",
-                f"Gear: {current_gear}",
                 f"Speed: {speed_mph:.1f} mph",
+                f"Gear: {current_gear}",
             ]
 
             for text in readouts:
@@ -152,7 +193,7 @@ def main():
             text_y += 30
             pygame.draw.rect(screen, (255, 255, 0), (100, text_y, 200, 20))
             pygame.draw.rect(
-                screen, (0, 255, 0), (10, text_y, int(speed_mph / 200 * 200), 20)
+                screen, (0, 255, 0), (100, text_y, int(speed_mph / 200 * 200), 20)
             )
             text_surface = font.render("MPH", True, (255, 255, 255))
             screen.blit(text_surface, (10, text_y))
