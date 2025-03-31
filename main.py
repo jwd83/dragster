@@ -81,6 +81,13 @@ def main():
     while running:
         dt = clock.tick(60) / 1000.0
 
+        screen.fill(BG_COLOR)
+        pygame.draw.rect(
+            screen,
+            TRACK_COLOR,
+            (track_x, track_y, TRACK_LENGTH_PX, TRACK_HEIGHT_PX),
+        )
+
         # Event handling
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -103,8 +110,6 @@ def main():
         if state == STATE_STAGING:
             pass
         elif state == STATE_RESULTS:
-            # Display results
-            screen.fill(BG_COLOR)
             text_surface = font.render(
                 f"Reaction Time: {reaction_time:.2f} seconds", True, (255, 255, 255)
             )
@@ -156,14 +161,6 @@ def main():
 
             # Convert speed to MPH
             speed_mph = speed_fps * 0.681818  # fps to mph
-
-            # Drawing
-            screen.fill(BG_COLOR)
-            pygame.draw.rect(
-                screen,
-                TRACK_COLOR,
-                (track_x, track_y, TRACK_LENGTH_PX, TRACK_HEIGHT_PX),
-            )
 
             # Draw car
             car_x = track_x + (position_ft / QUARTER_MILE_FEET) * TRACK_LENGTH_PX
