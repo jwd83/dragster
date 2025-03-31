@@ -11,7 +11,7 @@ TRACK_HEIGHT_PX = 50
 TRACK_COLOR = (255, 255, 255)
 CAR_SIZE = 10
 CAR_COLOR = (255, 0, 0)
-BG_COLOR = (0, 0, 0)
+BG_COLOR = (0, 180, 0)
 
 # Car constants
 GEAR_RATIOS = [3.587, 2.022, 1.384, 1.0, 0.861]
@@ -54,6 +54,7 @@ def calculate_force(torque, gear):
 
 
 def main():
+    global TIME_START
 
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -64,22 +65,31 @@ def main():
     track_x = (SCREEN_WIDTH - TRACK_LENGTH_PX) // 2
     track_y = (SCREEN_HEIGHT - TRACK_HEIGHT_PX) // 2
 
-    STATE_STAGING = 0
-    STATE_RACING = 1
-    STATE_RESULTS = 2
+    # Initialize state
+    STATE_STAGING = 1
+    STATE_RACING = 2
+    STATE_RESULTS = 3
+    state = STATE_STAGING
+    state_sub_staging = 0
 
+    # Initialize game variables
     reaction_time: float = 0.0
     quarter_mile_time: float = 0.0
     quarter_mile_speed: float = 0.0
 
     position_ft = 0.0
     speed_fps = 0.0
-    current_gear = 1
+    position_ft = 0.0
+    current_gear = 0
     throttle = False
-    state = STATE_RACING
     running = True
+    rpm = 0
+    speed_mph = 0.0
+
     while running:
         dt = clock.tick(60) / 1000.0
+
+        # draw the track
 
         screen.fill(BG_COLOR)
         pygame.draw.rect(
@@ -93,51 +103,86 @@ def main():
             if event.type == QUIT:
                 running = False
 
-            if state == STATE_RACING:
+            if event.type == KEYDOWN:
 
-                if event.type == KEYDOWN:
-                    if event.key == K_UP:
-                        throttle = True
-                        if reaction_time == 0.0:
-                            reaction_time = time.time() - TIME_START
-                    elif event.key == K_LEFT and current_gear > 1:
-                        current_gear -= 1
-                    elif event.key == K_RIGHT and current_gear < 5:
-                        current_gear += 1
-                elif event.type == KEYUP and event.key == K_UP:
-                    throttle = False
+                if state == STATE_RESULTS:
+                    if event.key == K_RIGHT:
+                        state = STATE_STAGING
 
-        if state == STATE_STAGING:
-            pass
-        elif state == STATE_RESULTS:
-            text_surface = font.render(
-                f"Reaction Time: {reaction_time:.2f} seconds", True, (255, 255, 255)
-            )
-            screen.blit(text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2))
-            text_surface = font.render(
-                f"Quarter Mile Time: {quarter_mile_time:.2f} seconds",
-                True,
-                (255, 255, 255),
-            )
-            screen.blit(
-                text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 30)
-            )
-            text_surface = font.render(
-                f"Quarter Mile Speed: {quarter_mile_speed:.2f} mph",
-                True,
-                (255, 255, 255),
-            )
-            screen.blit(
-                text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 60)
-            )
-            text_surface = font.render(
-                "Travel Time: {:.2f} seconds".format(quarter_mile_time - reaction_time),
-                True,
-                (255, 255, 255),
-            )
-            screen.blit(
-                text_surface, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 90)
-            )
+                elif state == STATE_STAGING:
+                    reaction_time = 0.0
+
+                    if event.key == K_RIGHT:
+                        state = STATE_RACING
+                        TIME_START = time.time()
+
+                elif state == STATE_RACING:
+
+                    if event.type == KEYDOWN:
+                        if event.key == K_UP:
+                            throttle = True
+                            if reaction_time == 0.0:
+                                reaction_time = time.time() - TIME_START
+                        elif event.key == K_LEFT and current_gear > 1:
+                            current_gear -= 1
+                        elif event.key == K_RIGHT and current_gear < 5:
+                            current_gear += 1
+                    elif event.type == KEYUP and event.key == K_UP:
+                        throttle = False
+
+        # end of event handling
+
+        # update and draw the scene based on state
+
+        if state == STATE_RESULTS:
+            current_gear = 1
+            state_sub_staging = 0
+            throttle = False
+            text_color = (0, 0, 0)
+            rpm = 0
+            results = [
+                f"Reaction Time: {reaction_time:.3f} seconds",
+                f"Quarter Mile Time: {quarter_mile_time:.3f} seconds",
+                f"Quarter Mile Speed: {quarter_mile_speed:.3f} mph",
+                f"Travel Time: {quarter_mile_time - reaction_time:.3f} seconds",
+                "Press [->] to restart",
+            ]
+            text_y = SCREEN_HEIGHT // 2 - 50
+            for text in results:
+                text_surface = font.render(text, True, text_color)
+                screen.blit(text_surface, (SCREEN_WIDTH // 2 - 100, text_y))
+                text_y += 30
+
+        elif state == STATE_STAGING:
+
+            if state_sub_staging == 0:
+                state_sub_staging = 1
+
+                # reset variables
+                reaction_time: float = 0.0
+                quarter_mile_time: float = 0.0
+                quarter_mile_speed: float = 0.0
+
+                position_ft = 0.0
+                speed_fps = 0.0
+                position_ft = 0.0
+                current_gear = 1
+                throttle = False
+                running = True
+                rpm = 0
+                speed_mph = 0.0
+
+            messages = [
+                "Press [->] to start and upshift",
+                "Press [UP] to throttle",
+                "Press [<-] to downshift",
+            ]
+            text_color = (0, 0, 0)
+            text_y = SCREEN_HEIGHT // 2 - 50
+            for text in messages:
+                text_surface = font.render(text, True, text_color)
+                screen.blit(text_surface, (SCREEN_WIDTH // 2 - 100, text_y))
+                text_y += 30
 
         elif state == STATE_RACING:
 
@@ -156,7 +201,7 @@ def main():
                 quarter_mile_time = time.time() - TIME_START
                 quarter_mile_speed = speed_fps * 0.681818  # fps to mph
 
-                print(f"Race Over! Time: {time.time() - TIME_START:.2f} seconds")
+                print(f"Race Over! Time: {time.time() - TIME_START:.3f} seconds")
                 # running = False
 
             # Convert speed to MPH
@@ -167,34 +212,35 @@ def main():
             car_y = track_y + (TRACK_HEIGHT_PX - CAR_SIZE) // 2
             pygame.draw.rect(screen, CAR_COLOR, (car_x, car_y, CAR_SIZE, CAR_SIZE))
 
-            # Draw text readouts
-            text_y = 10
-            readouts = [
-                f"RPM: {int(rpm)}",
-                f"Speed: {speed_mph:.1f} mph",
-                f"Gear: {current_gear}",
-            ]
+        # draw the game
+        # Draw text readouts
+        text_y = 10
+        readouts = [
+            f"RPM: {int(rpm)}",
+            f"Speed: {speed_mph:.1f} mph",
+            f"Gear: {current_gear}",
+        ]
 
-            for text in readouts:
-                text_surface = font.render(text, True, (255, 255, 255))
-                screen.blit(text_surface, (10, text_y))
-                text_y += 30
-
-            # draw rpm and speed gauges
-            pygame.draw.rect(screen, (255, 255, 0), (100, text_y, 200, 20))
-            pygame.draw.rect(
-                screen, (0, 255, 0), (100, text_y, int(rpm / MAX_RPM * 200), 20)
-            )
-            text_surface = font.render("RPM", True, (255, 255, 255))
+        for text in readouts:
+            text_surface = font.render(text, True, (255, 255, 255))
             screen.blit(text_surface, (10, text_y))
             text_y += 30
-            pygame.draw.rect(screen, (255, 255, 0), (100, text_y, 200, 20))
-            pygame.draw.rect(
-                screen, (0, 255, 0), (100, text_y, int(speed_mph / 200 * 200), 20)
-            )
-            text_surface = font.render("MPH", True, (255, 255, 255))
-            screen.blit(text_surface, (10, text_y))
-            text_y += 30
+
+        # draw rpm and speed gauges
+        pygame.draw.rect(screen, (255, 255, 0), (100, text_y, 200, 20))
+        pygame.draw.rect(
+            screen, (0, 255, 0), (100, text_y, int(rpm / MAX_RPM * 200), 20)
+        )
+        text_surface = font.render("RPM", True, (255, 255, 255))
+        screen.blit(text_surface, (10, text_y))
+        text_y += 30
+        pygame.draw.rect(screen, (255, 255, 0), (100, text_y, 200, 20))
+        pygame.draw.rect(
+            screen, (0, 255, 0), (100, text_y, int(speed_mph / 200 * 200), 20)
+        )
+        text_surface = font.render("MPH", True, (255, 255, 255))
+        screen.blit(text_surface, (10, text_y))
+        text_y += 30
 
         pygame.display.flip()
 
