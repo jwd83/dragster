@@ -2,6 +2,7 @@
 #
 # draw sprite instead of red box
 # draw a better looking track
+# add engine sfx
 
 import pygame
 from pygame.locals import *
