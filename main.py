@@ -1,3 +1,8 @@
+# todo
+#
+# draw sprite instead of red box
+# draw a better looking track
+
 import pygame
 from pygame.locals import *
 import math
