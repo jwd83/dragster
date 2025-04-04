@@ -70,6 +70,7 @@ def main():
 
     car_image = pygame.image.load("car.png").convert_alpha()
     car_width = car_image.get_width()
+    track_image = pygame.image.load("track.png").convert_alpha()
 
     track_x = (SCREEN_WIDTH - TRACK_LENGTH_PX) // 2
     track_y = (SCREEN_HEIGHT - TRACK_HEIGHT_PX) // 2
@@ -102,13 +103,14 @@ def main():
         dt = clock.tick(60) / 1000.0
 
         # draw the track
+        screen.blit(track_image)
 
-        screen.fill(BG_COLOR)
-        pygame.draw.rect(
-            screen,
-            TRACK_COLOR,
-            (track_x, track_y, TRACK_LENGTH_PX, TRACK_HEIGHT_PX),
-        )
+        # screen.fill(BG_COLOR)
+        # pygame.draw.rect(
+        #     screen,
+        #     TRACK_COLOR,
+        #     (track_x, track_y, TRACK_LENGTH_PX, TRACK_HEIGHT_PX),
+        # )
 
         held = pygame.key.get_pressed()
         if held[K_ESCAPE]:
@@ -122,7 +124,7 @@ def main():
             if event.type == KEYDOWN:
 
                 if state == STATE_RESULTS:
-                    if event.key == K_RIGHT:
+                    if event.key == K_RETURN:
                         state = STATE_STAGING
 
                 elif state == STATE_STAGING:
@@ -160,12 +162,13 @@ def main():
                 f"Quarter Mile Time: {quarter_mile_time:.3f} seconds",
                 f"Quarter Mile Speed: {quarter_mile_speed:.3f} mph",
                 f"Travel Time: {quarter_mile_time - reaction_time:.3f} seconds",
-                "Press [->] to restart",
+                "Press [enter] to restart",
             ]
             text_y = SCREEN_HEIGHT // 2 - 50
+            text_x = 800
             for text in results:
                 text_surface = font.render(text, True, text_color)
-                screen.blit(text_surface, (SCREEN_WIDTH // 2 - 100, text_y))
+                screen.blit(text_surface, (text_x, text_y))
                 text_y += 30
 
         elif state == STATE_STAGING:
@@ -193,10 +196,11 @@ def main():
                 "Press [<-] to downshift",
             ]
             text_color = (0, 0, 0)
+            text_x = 800
             text_y = SCREEN_HEIGHT // 2 - 50
             for text in messages:
                 text_surface = font.render(text, True, text_color)
-                screen.blit(text_surface, (SCREEN_WIDTH // 2 - 100, text_y))
+                screen.blit(text_surface, (text_x, text_y))
                 text_y += 30
 
         elif state == STATE_RACING:
@@ -230,13 +234,14 @@ def main():
                 + (position_ft / QUARTER_MILE_FEET) * TRACK_LENGTH_PX
                 - car_width
             )
-            car_y = track_y + (TRACK_HEIGHT_PX - CAR_SIZE) // 2
+            car_y = 250
             screen.blit(car_image, (car_x, car_y))
             # pygame.draw.rect(screen, CAR_COLOR, (car_x, car_y, CAR_SIZE, CAR_SIZE))
 
         # draw the game
         # Draw text readouts
-        text_y = 10
+        text_y = 360
+        text_x = 420
         readouts = [
             f"RPM: {int(rpm)}",
             f"Speed: {speed_mph:.1f} mph",
@@ -249,24 +254,28 @@ def main():
 
         for text in readouts:
             text_surface = font.render(text, True, (255, 255, 255))
-            screen.blit(text_surface, (10, text_y))
+            screen.blit(text_surface, (text_x, text_y))
             text_y += 30
 
         # draw rpm and speed gauges
-        pygame.draw.rect(screen, (255, 255, 0), (100, text_y, 200, 20))
+        gauge_x = 200
+        gauge_y = 360
+        gauge_width = 200
+        pygame.draw.rect(screen, (255, 255, 0), (gauge_x, gauge_y, gauge_width, 20))
         pygame.draw.rect(
-            screen, (0, 255, 0), (100, text_y, int(rpm / MAX_RPM * 200), 20)
+            screen,
+            (0, 255, 0),
+            (gauge_x, gauge_y, int(rpm / MAX_RPM * gauge_width), 20),
         )
-        text_surface = font.render("RPM", True, (255, 255, 255))
-        screen.blit(text_surface, (10, text_y))
-        text_y += 30
-        pygame.draw.rect(screen, (255, 255, 0), (100, text_y, 200, 20))
+
+        gauge_y += 30
+
+        pygame.draw.rect(screen, (255, 255, 0), (gauge_x, gauge_y, gauge_width, 20))
         pygame.draw.rect(
-            screen, (0, 255, 0), (100, text_y, int(speed_mph / 200 * 200), 20)
+            screen,
+            (0, 255, 0),
+            (gauge_x, gauge_y, int(speed_mph / 200 * gauge_width), 20),
         )
-        text_surface = font.render("MPH", True, (255, 255, 255))
-        screen.blit(text_surface, (10, text_y))
-        text_y += 30
 
         pygame.display.flip()
 
