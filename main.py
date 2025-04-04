@@ -69,6 +69,7 @@ def main():
     font = pygame.font.SysFont("Arial", 24)
 
     car_image = pygame.image.load("car.png").convert_alpha()
+    car_width = car_image.get_width()
 
     track_x = (SCREEN_WIDTH - TRACK_LENGTH_PX) // 2
     track_y = (SCREEN_HEIGHT - TRACK_HEIGHT_PX) // 2
@@ -93,6 +94,9 @@ def main():
     running = True
     rpm = 0
     speed_mph = 0.0
+    torque = 0
+    power = 0
+    force = 0
 
     while running:
         dt = clock.tick(60) / 1000.0
@@ -106,6 +110,10 @@ def main():
             (track_x, track_y, TRACK_LENGTH_PX, TRACK_HEIGHT_PX),
         )
 
+        held = pygame.key.get_pressed()
+        if held[K_ESCAPE]:
+            running = False
+        throttle = held[K_UP]
         # Event handling
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -199,7 +207,9 @@ def main():
 
             if throttle:
                 torque = calculate_torque(rpm)
-                force = calculate_force(torque, current_gear)
+                power = torque * max(2000, rpm) / 5252
+                force = calculate_force(power, current_gear)
+                # force = calculate_force(torque, current_gear)
                 speed_fps += (force / MASS) * dt
 
             position_ft += speed_fps * dt
@@ -215,9 +225,14 @@ def main():
             speed_mph = speed_fps * 0.681818  # fps to mph
 
             # Draw car
-            car_x = track_x + (position_ft / QUARTER_MILE_FEET) * TRACK_LENGTH_PX
+            car_x = (
+                track_x
+                + (position_ft / QUARTER_MILE_FEET) * TRACK_LENGTH_PX
+                - car_width
+            )
             car_y = track_y + (TRACK_HEIGHT_PX - CAR_SIZE) // 2
-            pygame.draw.rect(screen, CAR_COLOR, (car_x, car_y, CAR_SIZE, CAR_SIZE))
+            screen.blit(car_image, (car_x, car_y))
+            # pygame.draw.rect(screen, CAR_COLOR, (car_x, car_y, CAR_SIZE, CAR_SIZE))
 
         # draw the game
         # Draw text readouts
@@ -226,6 +241,10 @@ def main():
             f"RPM: {int(rpm)}",
             f"Speed: {speed_mph:.1f} mph",
             f"Gear: {current_gear}",
+            f"Throttle: {'ON' if throttle else 'OFF'}",
+            f"Torque: {torque:.2f} ft-lb",
+            f"Power: {power:.2f} hp",
+            f"Force: {force:.2f} lbs",
         ]
 
         for text in readouts:
