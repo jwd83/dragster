@@ -263,7 +263,7 @@ def main():
         gauge_y = 360
         gauge_width = 200
         display_rpm = max(rpm, 1000)
-        winsound.Beep(int(display_rpm), int(1000 / 60))
+        winsound.Beep(int(display_rpm), 1)
         pygame.draw.rect(screen, (255, 255, 0), (gauge_x, gauge_y, gauge_width, 20))
         pygame.draw.rect(
             screen,
