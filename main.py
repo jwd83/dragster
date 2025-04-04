@@ -68,6 +68,8 @@ def main():
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial", 24)
 
+    car_image = pygame.image.load("car.png").convert_alpha()
+
     track_x = (SCREEN_WIDTH - TRACK_LENGTH_PX) // 2
     track_y = (SCREEN_HEIGHT - TRACK_HEIGHT_PX) // 2
 
@@ -116,7 +118,6 @@ def main():
                         state = STATE_STAGING
 
                 elif state == STATE_STAGING:
-                    reaction_time = 0.0
 
                     if event.key == K_RIGHT:
                         state = STATE_RACING
