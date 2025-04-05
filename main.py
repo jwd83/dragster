@@ -73,6 +73,8 @@ def main():
     car_width = car_image.get_width()
     track_image = pygame.image.load("track.png").convert_alpha()
 
+    sound_enabled = False
+
     track_x = (SCREEN_WIDTH - TRACK_LENGTH_PX) // 2
     track_y = (SCREEN_HEIGHT - TRACK_HEIGHT_PX) // 2
 
@@ -263,7 +265,9 @@ def main():
         gauge_y = 360
         gauge_width = 200
         display_rpm = max(rpm, 1000)
-        winsound.Beep(int(display_rpm), 1)
+
+        if sound_enabled:
+            winsound.Beep(int(display_rpm), 1)
         pygame.draw.rect(screen, (255, 255, 0), (gauge_x, gauge_y, gauge_width, 20))
         pygame.draw.rect(
             screen,
