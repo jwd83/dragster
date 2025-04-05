@@ -101,6 +101,8 @@ def main():
     torque = 0
     power = 0
     force = 0
+    car_y = 250
+    car_x = track_x - car_width
 
     while running:
         dt = clock.tick(60) / 1000.0
@@ -125,6 +127,9 @@ def main():
                 running = False
 
             if event.type == KEYDOWN:
+
+                if event.key == K_s:
+                    sound_enabled = not sound_enabled
 
                 if state == STATE_RESULTS:
                     if event.key == K_RETURN:
@@ -237,9 +242,8 @@ def main():
                 + (position_ft / QUARTER_MILE_FEET) * TRACK_LENGTH_PX
                 - car_width
             )
-            car_y = 250
-            screen.blit(car_image, (car_x, car_y))
-            # pygame.draw.rect(screen, CAR_COLOR, (car_x, car_y, CAR_SIZE, CAR_SIZE))
+        screen.blit(car_image, (car_x, car_y))
+        # pygame.draw.rect(screen, CAR_COLOR, (car_x, car_y, CAR_SIZE, CAR_SIZE))
 
         # draw the game
         # Draw text readouts
