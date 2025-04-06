@@ -40,7 +40,8 @@ class Vehicle:
                 self.current_speed_mph, self.tick_rate
             )
 
-            self.current_speed_mph += accel_modifier - decel_modifier
+            self.current_speed_mph += accel_modifier + decel_modifier
+            self.current_speed_mph = max(0, self.current_speed_mph)
 
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
 
@@ -74,7 +75,8 @@ class Vehicle:
         F_total = F_rr + F_drag
         a = -F_total / mass
         dv = a * dt
-        return -dv
+        dv = dv * 2.23694  # Convert m/s to mph
+        return dv
 
     def engine_rpm_from_speed_and_gear(self) -> float:
         # Calculate the engine RPM based on the current speed and gear
@@ -93,7 +95,7 @@ if __name__ == "__main__":
     # Example usage
     vehicle = Vehicle()
 
-    vehicle.current_gear = 1
+    vehicle.current_gear = 5
     vehicle.current_engine_rpm = 6000
 
     print("Vehicle initialized.")
