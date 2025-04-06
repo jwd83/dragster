@@ -9,6 +9,10 @@ class Vehicle:
         self.transmission = Transmission()
         self.wheel = Wheel()
 
+        self.current_gear = 1
+        self.current_speed = 0.0
+        self.current_engine_rpm = self.engine.min_rpm
+
 
 if __name__ == "__main__":
     # Example usage
