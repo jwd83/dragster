@@ -3,7 +3,20 @@
 
 
 class Engine:
-    def __init__(self, torque_curve: list):
+
+    def __init__(
+        self,
+        torque_curve: list = [
+            (800, 20),
+            (1000, 60),
+            (2000, 105),
+            (3000, 102),
+            (4000, 100),
+            (7000, 98),
+            (8500, 44),
+            (9000, 0),
+        ],
+    ):
         self.torque_curve = torque_curve.copy()
         self.max_rpm = max(torque[0] for torque in torque_curve)
         self.min_rpm = min(torque[0] for torque in torque_curve)
@@ -29,20 +42,14 @@ class Engine:
 
 if __name__ == "__main__":
     # Example usage
-    engine = Engine(
-        [
-            (800, 20),
-            (1000, 50),
-            (2000, 100),
-            (3000, 150),
-            (4000, 200),
-            (7000, 250),
-            (8000, 0),
-        ]
-    )
+    engine = Engine()
     print("Max RPM:", engine.max_rpm)
     print("Max Torque:", engine.max_torque)
     print("Max Horsepower:", engine.max_horsepower)
-    print("Torque at 2500 RPM:", engine.torque(2500))
-    print("Horsepower at 2500 RPM:", engine.horsepower(2500))
+    # print("Torque at 2500 RPM:", engine.torque(2500))
+    # print("Horsepower at 2500 RPM:", engine.horsepower(2500))
     print("Min RPM:", engine.min_rpm)
+
+    for i in range(0, 10000, 1000):
+        print(f"Torque at {i} RPM:", engine.torque(i))
+        print(f"Horsepower at {i} RPM:", engine.horsepower(i))

@@ -2,7 +2,12 @@
 
 
 class Transmission:
-    def __init__(self, forward_gears: list, reverse_gear: float, final_drive: float):
+    def __init__(
+        self,
+        forward_gears: list = [3.587, 2.022, 1.384, 1.0, 0.861],
+        reverse_gear: float = 4.0,
+        final_drive: float = 4.3,
+    ):
         self.forward_gears = forward_gears.copy()
         self.reverse_gear = reverse_gear
         self.final_drive = final_drive
@@ -53,7 +58,7 @@ class Transmission:
 
 if __name__ == "__main__":
     # Example usage
-    t = Transmission([3.587, 2.022, 1.384, 1.0, 0.861], 4.0, 4.3)
+    t = Transmission()
     for i in range(-1, 6):
         orpm = t.output_rpm(1000, i)
         print(f"Gear {t.gear_name(i)}: {t.gear_ratio(i):.3f}")
