@@ -9,16 +9,16 @@ class Wheel:
         # derive our circumference
         self.__circumference_inches = math.pi * self.__diameter_inches
 
-        self.rpm_to_mph_ratio = self.__circumference_inches * 60 / 63360.0
+        self.__rpm_to_mph_ratio = self.__circumference_inches * 60 / 63360.0
 
     def get_diameter_inches(self) -> float:
         return self.__diameter_inches
 
     def speed_mph(self, input_rpm: float) -> float:
-        return self.rpm_to_mph_ratio * input_rpm
+        return self.__rpm_to_mph_ratio * input_rpm
 
     def rpm_from_speed(self, speed_mph: float) -> float:
-        return speed_mph / self.rpm_to_mph_ratio
+        return speed_mph / self.__rpm_to_mph_ratio
 
 
 if __name__ == "__main__":
