@@ -95,8 +95,8 @@ if __name__ == "__main__":
     # Example usage
     vehicle = Vehicle()
 
-    vehicle.current_gear = 1
-    vehicle.current_engine_rpm = 2200
+    vehicle.current_gear = 5
+    vehicle.current_engine_rpm = 5500
 
     print("Vehicle initialized.")
 
