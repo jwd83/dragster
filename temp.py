@@ -1,6 +1,117 @@
-from engine import Engine
-from transmission import Transmission
-from wheel import Wheel
+import math
+
+
+class Wheel:
+    def __init__(self, diameter_inches: float = 22.7):
+        # copy the diameter_inches value to the instance variable
+        self.__diameter_inches: float = diameter_inches
+
+        # derive our circumference
+        self.__circumference_inches = math.pi * self.__diameter_inches
+
+        self.__rpm_to_mph_ratio = self.__circumference_inches * 60 / 63360.0
+
+    def get_diameter_inches(self) -> float:
+        return self.__diameter_inches
+
+    def speed_mph(self, input_rpm: float) -> float:
+        return self.__rpm_to_mph_ratio * input_rpm
+
+    def rpm_from_speed(self, speed_mph: float) -> float:
+        return speed_mph / self.__rpm_to_mph_ratio
+
+
+class Engine:
+
+    def __init__(
+        self,
+        torque_curve: list = [
+            (800, 20),
+            (1000, 60),
+            (2000, 105),
+            (3000, 102),
+            (4000, 100),
+            (7000, 98),
+            (8500, 44),
+            (9000, 0),
+        ],
+    ):
+        self.torque_curve = torque_curve.copy()
+        self.max_rpm = max(torque[0] for torque in torque_curve)
+        self.min_rpm = min(torque[0] for torque in torque_curve)
+        self.max_torque = max(torque[1] for torque in torque_curve)
+        self.max_horsepower = max(
+            (torque[1] * torque[0]) / 5252 for torque in torque_curve
+        )
+
+    def torque(self, rpm: float):
+        # Interpolate the torque value based on the RPM
+        for i in range(len(self.torque_curve) - 1):
+            if self.torque_curve[i][0] <= rpm <= self.torque_curve[i + 1][0]:
+                rpm1, torque1 = self.torque_curve[i]
+                rpm2, torque2 = self.torque_curve[i + 1]
+                return torque1 + (torque2 - torque1) * (rpm - rpm1) / (rpm2 - rpm1)
+        return 0.0
+
+    def horsepower(self, rpm: float):
+        # Calculate horsepower based on torque and RPM
+        torque = self.torque(rpm)
+        return (torque * rpm) / 5252
+
+
+class Transmission:
+    def __init__(
+        self,
+        forward_gears: list = [3.587, 2.022, 1.384, 1.0, 0.861],
+        reverse_gear: float = 4.0,
+        final_drive: float = 4.3,
+    ):
+        self.forward_gears = forward_gears.copy()
+        self.reverse_gear = reverse_gear
+        self.final_drive = final_drive
+        self.max_gear = len(forward_gears)
+
+    def output_rpm(self, input_rpm: float, gear: int) -> float:
+        o_r = self.output_ratio(gear)
+        return input_rpm * o_r
+
+    def output_ratio(self, gear: int) -> float:
+        ir = self.input_ratio(gear)
+        if ir == 0.0:
+            return 0.0
+        return 1.0 / ir
+
+    def input_rpm(self, output_rpm: float, gear: int) -> float:
+        ir = self.input_ratio(gear)
+        return output_rpm * ir
+
+    def input_ratio(self, gear: int) -> float:
+        return self.final_drive * self.gear_ratio(gear)
+
+    def gear_ratio(self, gear: int) -> float:
+
+        if gear == -1:
+            return self.reverse_gear
+        elif gear == 0:
+            return 0.0
+        elif 1 <= gear <= self.max_gear:
+            return self.forward_gears[gear - 1]
+        else:
+            raise ValueError(
+                f"Invalid gear: {gear}: int. Must be between -1 and {self.max_gear}."
+            )
+
+    def gear_name(self, gear: int) -> str:
+        if gear == -1:
+            return "R"
+        elif gear == 0:
+            return "N"
+        elif 1 <= gear <= self.max_gear:
+            return f"{gear}"
+        else:
+            raise ValueError(
+                f"Invalid gear: {gear}: int. Must be between -1 and {self.max_gear}."
+            )
 
 
 class Vehicle:
@@ -35,12 +146,11 @@ class Vehicle:
             # if the vehicle is moving and there is no throttle, decelerate it to 0
             decel_modifier = 0.0
             accel_modifier = 0.0
+            cur_mph = self.current_speed_mph
 
-            decel_modifier = self.calculate_decel(
-                self.current_speed_mph, self.tick_rate
-            )
+            decel_modifier = self.calculate_decel(cur_mph, self.tick_rate)
 
-            self.current_speed_mph += accel_modifier - decel_modifier
+            self.current_speed_mph = max(0, cur_mph + accel_modifier + decel_modifier)
 
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
 
@@ -74,7 +184,8 @@ class Vehicle:
         F_total = F_rr + F_drag
         a = -F_total / mass
         dv = a * dt
-        return -dv
+        dv = dv * 2.23694  # Convert m/s to mph
+        return dv
 
     def engine_rpm_from_speed_and_gear(self) -> float:
         # Calculate the engine RPM based on the current speed and gear
@@ -90,10 +201,10 @@ class Vehicle:
 
 
 if __name__ == "__main__":
-    # Example usage
+
     vehicle = Vehicle()
 
-    vehicle.current_gear = 1
+    vehicle.current_gear = 5
     vehicle.current_engine_rpm = 6000
 
     print("Vehicle initialized.")
