@@ -6,8 +6,11 @@ class Engine:
     def __init__(self, torque_curve: list):
         self.torque_curve = torque_curve.copy()
         self.max_rpm = max(torque[0] for torque in torque_curve)
-        self.max_torque = max(torque[1] for torque in torque_curve)
         self.min_rpm = min(torque[0] for torque in torque_curve)
+        self.max_torque = max(torque[1] for torque in torque_curve)
+        self.max_horsepower = max(
+            (torque[1] * torque[0]) / 5252 for torque in torque_curve
+        )
 
     def torque(self, rpm: float):
         # Interpolate the torque value based on the RPM
@@ -22,3 +25,24 @@ class Engine:
         # Calculate horsepower based on torque and RPM
         torque = self.torque(rpm)
         return (torque * rpm) / 5252
+
+
+if __name__ == "__main__":
+    # Example usage
+    engine = Engine(
+        [
+            (800, 20),
+            (1000, 50),
+            (2000, 100),
+            (3000, 150),
+            (4000, 200),
+            (7000, 250),
+            (8000, 0),
+        ]
+    )
+    print("Max RPM:", engine.max_rpm)
+    print("Max Torque:", engine.max_torque)
+    print("Max Horsepower:", engine.max_horsepower)
+    print("Torque at 2500 RPM:", engine.torque(2500))
+    print("Horsepower at 2500 RPM:", engine.horsepower(2500))
+    print("Min RPM:", engine.min_rpm)
