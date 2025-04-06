@@ -14,7 +14,7 @@ class Vehicle:
         self.current_speed_mph = 0.0
         self.current_engine_rpm = self.engine.min_rpm
         self.current_throttle = 0.0
-        self.tick_rate = 1 / 60  # 60 FPS
+        self.tick_rate = 1 / 120  # 60 FPS
         self.drag_coefficient = 0.3
         self.rolling_resistance = 0.015
         self.frontal_area = 2.0  # m^2
@@ -95,8 +95,8 @@ if __name__ == "__main__":
     # Example usage
     vehicle = Vehicle()
 
-    vehicle.current_gear = 5
-    vehicle.current_engine_rpm = 6000
+    vehicle.current_gear = 1
+    vehicle.current_engine_rpm = 2200
 
     print("Vehicle initialized.")
 
