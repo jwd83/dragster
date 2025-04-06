@@ -8,7 +8,7 @@ import pygame
 from pygame.locals import *
 import math
 import time
-import winsound
+# import winsound
 
 # Constants
 SCREEN_WIDTH = 1280
@@ -271,7 +271,8 @@ def main():
         display_rpm = max(rpm, 1000)
 
         if sound_enabled:
-            winsound.Beep(int(display_rpm), 1)
+            pass
+            # winsound.Beep(int(display_rpm), 1)
         pygame.draw.rect(screen, (255, 255, 0), (gauge_x, gauge_y, gauge_width, 20))
         pygame.draw.rect(
             screen,
