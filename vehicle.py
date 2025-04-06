@@ -16,8 +16,9 @@ class Vehicle:
         self.current_throttle = 0.0
         self.tick_rate = 1 / 60  # 60 FPS
         self.drag_coefficient = 0.3
-        self.rolling_resistance = 0.5
-        self.air_density = 1
+        self.rolling_resistance = 0.015
+        self.frontal_area = 2.0  # m^2
+        self.air_density = 1.225  # kg/m^3
 
     def readout(self) -> str:
         return f"Gear: {self.current_gear}, Speed: {self.current_speed_mph:.2f} mph, TPS: {self.current_throttle:.2f} RPM: {self.current_engine_rpm:.2f}, Ticks: {self.ticks} ({self.ticks * self.tick_rate:.4f} sec)"
