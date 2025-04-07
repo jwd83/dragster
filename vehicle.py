@@ -33,23 +33,43 @@ class Vehicle:
                 self.current_speed_mph = self.speed_mph_from_engine_rpm_and_gear()
         else:
             # if the vehicle is moving and there is no throttle, decelerate it to 0
-            decel_modifier = 0.0
-            accel_modifier = 0.0
+            diff = self.calculate_acceleration()
+            diff += self.calculate_deceleration()
+            self.current_speed_mph += diff
 
-            decel_modifier = self.calculate_decel(
-                self.current_speed_mph, self.tick_rate
-            )
-
-            self.current_speed_mph += accel_modifier + decel_modifier
             self.current_speed_mph = max(0, self.current_speed_mph)
 
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
 
-    def calculate_decel(
-        self,
-        input_velocity_mph,
-        dt,
-    ):
+    def calculate_acceleration(self) -> float:
+
+        # lookup the car's current horsepower
+        hp = self.engine.horsepower(self.current_engine_rpm)
+        kw = hp * 0.7457  # Convert hp to kW
+
+        # accelerate the car based on throttle position, horsepower, and weight
+        # the formula is:
+        # acceleration = (horsepower * throttle) / weight
+        tps = self.current_throttle
+        kg = self.weight
+
+        print(tps, "TPS")
+        print(hp, "HP")
+        print(kw, "KW")
+
+        # convert to m/s^2
+        acceleration = (kw * tps) / kg
+
+        # convert to mph/s
+        acceleration = acceleration * 2.23694
+
+        # convert to mph difference over the tick_rate
+        acceleration = acceleration * self.tick_rate
+
+        print(f"Acceleration: {acceleration:.20f} mph/s")
+        return acceleration
+
+    def calculate_deceleration(self) -> float:
         """
         Calculates the new speed of a coasting vehicle over a time step.
 
@@ -63,7 +83,7 @@ class Vehicle:
         # unit conversions
         mass = self.weight  # kg
         Ad = 1.225  # kg/m^3 (standard air density at sea level)
-        iv = input_velocity_mph * 0.44704  # Convert mph to m/s
+        iv = self.current_throttle * 0.44704  # Convert mph to m/s
         g = 9.81  # m/s^2 (gravity)
         Cd = self.drag_coefficient
         FrA = self.frontal_area
@@ -74,7 +94,7 @@ class Vehicle:
         F_drag = 0.5 * Ad * Cd * FrA * iv**2
         F_total = F_rr + F_drag
         a = -F_total / mass
-        dv = a * dt
+        dv = a * self.tick_rate
         dv = dv * 2.23694  # Convert m/s to mph
         return dv
 
@@ -120,13 +140,13 @@ if __name__ == "__main__":
     vehicle.current_throttle = 1.0  # Full throttle
     vehicle.update()
     print(vehicle.readout())
-    vehicle.current_throttle = 0.0  # No throttle
+    # vehicle.current_throttle = 1  # No throttle
     vehicle.update()
 
     print(vehicle.readout())
 
     print("...")
-    while vehicle.current_speed_mph > 0:
+    while vehicle.current_speed_mph > 0 and vehicle.current_speed_mph < 30:
 
         if vehicle.ticks % 500 == 0:
             print(vehicle.readout())
