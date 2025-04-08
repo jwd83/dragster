@@ -14,7 +14,7 @@ class Vehicle:
         self.current_speed_mph = 0.0
         self.current_engine_rpm = self.engine.min_rpm
         self.current_throttle = 0.0
-        self.tick_rate = 1 / 60  # 60 FPS
+        self.tick_rate = 1 / 60  # simulation rate (Hz)
         self.drag_coefficient = 0.3
         self.rolling_resistance = 0.015
         self.frontal_area = 2.0  # m^2
@@ -42,13 +42,36 @@ class Vehicle:
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
 
     def calculate_acceleration(self) -> float:
-        acceleration = 0.0
+        if self.current_throttle == 0 or self.current_speed_mph == 0:
+            return 0.0
 
-        power = self.engine.horsepower(self.current_engine_rpm) * self.current_throttle
-        weight = self.weight
-        gearing = self.transmission.output_ratio(self.current_gear)
+        # Get engine power at current RPM (throttle-modulated)
+        hp = self.engine.horsepower(self.current_engine_rpm) * self.current_throttle
 
-        return acceleration
+        # Convert horsepower to watts (1 hp = 745.7 watts)
+        power_watts = hp * 745.7
+
+        # Convert speed to m/s for force = power / velocity
+        speed_mps = self.current_speed_mph * 0.44704
+
+        # Avoid division by zero at very low speeds
+        if speed_mps < 0.1:
+            speed_mps = 0.1
+
+        # Compute force at wheels
+        force = power_watts / speed_mps
+
+        # Estimate drivetrain efficiency losses (~85%)
+        drivetrain_efficiency = 0.85
+        force *= drivetrain_efficiency
+
+        # Compute acceleration (a = F / m)
+        acceleration_mps2 = force / self.weight
+
+        # Convert m/s² to mph per tick
+        acceleration_mph = acceleration_mps2 * self.tick_rate * 2.23694
+
+        return acceleration_mph
 
     def calculate_deceleration(self) -> float:
         """
