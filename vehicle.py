@@ -185,13 +185,13 @@ if __name__ == "__main__":
     print(vehicle.readout())
 
     print("...")
-    while vehicle.current_speed_mph > 0 and vehicle.current_speed_mph < 130:
+    while vehicle.current_speed_mph > 0 and vehicle.current_speed_mph < 120:
         # if vehicle.ticks == 50:
         # vehicle.current_throttle = 0.0
         if vehicle.ticks % 20 == 0:
             print(vehicle.readout())
 
-        if vehicle.current_engine_rpm > 7500:
+        if vehicle.current_engine_rpm > 7000:
             vehicle.current_gear += 1
 
         # if vehicle.current_speed_mph > 100:
