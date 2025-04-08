@@ -185,7 +185,11 @@ if __name__ == "__main__":
     print(vehicle.readout())
 
     print("...")
-    while vehicle.current_speed_mph > 0 and vehicle.current_speed_mph < 120:
+    while (
+        vehicle.current_speed_mph > 0
+        and vehicle.current_speed_mph < 120
+        and vehicle.odometer_miles < 0.25
+    ):
         # if vehicle.ticks == 50:
         # vehicle.current_throttle = 0.0
         if vehicle.ticks % 20 == 0:
