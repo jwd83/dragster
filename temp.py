@@ -1,26 +1,6 @@
 import math
 
 
-class Wheel:
-    def __init__(self, diameter_inches: float = 22.7):
-        # copy the diameter_inches value to the instance variable
-        self.__diameter_inches: float = diameter_inches
-
-        # derive our circumference
-        self.__circumference_inches = math.pi * self.__diameter_inches
-
-        self.__rpm_to_mph_ratio = self.__circumference_inches * 60 / 63360.0
-
-    def get_diameter_inches(self) -> float:
-        return self.__diameter_inches
-
-    def speed_mph(self, input_rpm: float) -> float:
-        return self.__rpm_to_mph_ratio * input_rpm
-
-    def rpm_from_speed(self, speed_mph: float) -> float:
-        return speed_mph / self.__rpm_to_mph_ratio
-
-
 class Engine:
 
     def __init__(
@@ -57,6 +37,26 @@ class Engine:
         # Calculate horsepower based on torque and RPM
         torque = self.torque(rpm)
         return (torque * rpm) / 5252
+
+
+class Wheel:
+    def __init__(self, diameter_inches: float = 22.7):
+        # copy the diameter_inches value to the instance variable
+        self.__diameter_inches: float = diameter_inches
+
+        # derive our circumference
+        self.__circumference_inches = math.pi * self.__diameter_inches
+
+        self.__rpm_to_mph_ratio = self.__circumference_inches * 60 / 63360.0
+
+    def get_diameter_inches(self) -> float:
+        return self.__diameter_inches
+
+    def speed_mph(self, input_rpm: float) -> float:
+        return self.__rpm_to_mph_ratio * input_rpm
+
+    def rpm_from_speed(self, speed_mph: float) -> float:
+        return speed_mph / self.__rpm_to_mph_ratio
 
 
 class Transmission:
@@ -144,21 +144,24 @@ class Vehicle:
                 self.current_speed_mph = self.speed_mph_from_engine_rpm_and_gear()
         else:
             # if the vehicle is moving and there is no throttle, decelerate it to 0
-            decel_modifier = 0.0
-            accel_modifier = 0.0
-            cur_mph = self.current_speed_mph
+            diff = self.calculate_acceleration()
+            diff += self.calculate_deceleration()
+            self.current_speed_mph += diff
 
-            decel_modifier = self.calculate_decel(cur_mph, self.tick_rate)
-
-            self.current_speed_mph = max(0, cur_mph + accel_modifier + decel_modifier)
+            self.current_speed_mph = max(0, self.current_speed_mph)
 
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
 
-    def calculate_decel(
-        self,
-        input_velocity_mph,
-        dt,
-    ):
+    def calculate_acceleration(self) -> float:
+        acceleration = 0.0
+
+        power = self.engine.horsepower(self.current_engine_rpm) * self.current_throttle
+        weight = self.weight
+        gearing = self.transmission.output_ratio(self.current_gear)
+
+        return acceleration
+
+    def calculate_deceleration(self) -> float:
         """
         Calculates the new speed of a coasting vehicle over a time step.
 
@@ -172,7 +175,7 @@ class Vehicle:
         # unit conversions
         mass = self.weight  # kg
         Ad = 1.225  # kg/m^3 (standard air density at sea level)
-        iv = input_velocity_mph * 0.44704  # Convert mph to m/s
+        iv = self.current_throttle * 0.44704  # Convert mph to m/s
         g = 9.81  # m/s^2 (gravity)
         Cd = self.drag_coefficient
         FrA = self.frontal_area
@@ -183,7 +186,7 @@ class Vehicle:
         F_drag = 0.5 * Ad * Cd * FrA * iv**2
         F_total = F_rr + F_drag
         a = -F_total / mass
-        dv = a * dt
+        dv = a * self.tick_rate
         dv = dv * 2.23694  # Convert m/s to mph
         return dv
 
@@ -201,11 +204,11 @@ class Vehicle:
 
 
 if __name__ == "__main__":
-
+    # Example usage
     vehicle = Vehicle()
 
-    vehicle.current_gear = 5
-    vehicle.current_engine_rpm = 6000
+    vehicle.current_gear = 1
+    vehicle.current_engine_rpm = 850
 
     print("Vehicle initialized.")
 
@@ -229,12 +232,15 @@ if __name__ == "__main__":
     vehicle.current_throttle = 1.0  # Full throttle
     vehicle.update()
     print(vehicle.readout())
-    vehicle.current_throttle = 0.0  # No throttle
+    # vehicle.current_throttle = 1  # No throttle
     vehicle.update()
 
     print(vehicle.readout())
 
     print("...")
-    while vehicle.current_speed_mph > 0:
+    while vehicle.current_speed_mph > 0 and vehicle.current_speed_mph < 30:
+
+        if vehicle.ticks % 500 == 0:
+            print(vehicle.readout())
         vehicle.update()
     print(vehicle.readout())
