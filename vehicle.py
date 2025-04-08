@@ -42,31 +42,39 @@ class Vehicle:
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
 
     def calculate_acceleration(self) -> float:
+        acceleration = 0.0
 
-        # lookup the car's current horsepower
-        hp = self.engine.horsepower(self.current_engine_rpm)
-        kw = hp * 0.7457  # Convert hp to kW
+        power = self.engine.horsepower(self.current_engine_rpm) * self.current_throttle
+        weight = self.weight
+        gearing = self.transmission.output_ratio(self.current_gear)
+        
 
-        # accelerate the car based on throttle position, horsepower, and weight
-        # the formula is:
-        # acceleration = (horsepower * throttle) / weight
-        tps = self.current_throttle
-        kg = self.weight
 
-        print(tps, "TPS")
-        print(hp, "HP")
-        print(kw, "KW")
 
-        # convert to m/s^2
-        acceleration = (kw * tps) / kg
+        # # lookup the car's current horsepower
+        # hp = self.engine.horsepower(self.current_engine_rpm)
+        # kw = hp * 0.7457  # Convert hp to kW
 
-        # convert to mph/s
-        acceleration = acceleration * 2.23694
+        # # accelerate the car based on throttle position, horsepower, and weight
+        # # the formula is:
+        # # acceleration = (horsepower * throttle) / weight
+        # tps = self.current_throttle
+        # kg = self.weight
 
-        # convert to mph difference over the tick_rate
-        acceleration = acceleration * self.tick_rate
+        # print(tps, "TPS")
+        # print(hp, "HP")
+        # print(kw, "KW")
 
-        print(f"Acceleration: {acceleration:.20f} mph/s")
+        # # convert to m/s^2
+        # acceleration = (kw * tps) / kg
+
+        # # convert to mph/s
+        # acceleration = acceleration * 2.23694
+
+        # # convert to mph difference over the tick_rate
+        # acceleration = acceleration * self.tick_rate
+
+        # print(f"Acceleration: {acceleration:.20f} mph/s")
         return acceleration
 
     def calculate_deceleration(self) -> float:
