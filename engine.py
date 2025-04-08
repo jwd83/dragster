@@ -45,6 +45,9 @@ class Engine:
 
 
 if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+    import numpy as np
+
     # Example usage
     engine = Engine()
     print("Max RPM:", engine.max_rpm)
@@ -54,16 +57,7 @@ if __name__ == "__main__":
     # print("Horsepower at 2500 RPM:", engine.horsepower(2500))
     print("Min RPM:", engine.min_rpm)
 
-    for i in range(0, 10000, 1000):
-        print(f"Torque at {i} RPM:", engine.torque(i))
-        print(f"Horsepower at {i} RPM:", engine.horsepower(i))
-
-    import matplotlib.pyplot as plt
-
-    import numpy as np
-
     # make a plot of the torque and power curve vs rpm like a dyno chart
-
     x = np.arange(0, engine.max_rpm + 500, 100)
     y = np.array([engine.torque(i) for i in x])
     y2 = np.array([engine.horsepower(i) for i in x])
