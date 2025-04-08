@@ -27,12 +27,14 @@ class Vehicle:
         self.drivetrain_efficiency = 0.85
         self.last_accel = 0.0
         self.last_decel = 0.0
+        self.odometer_miles: float = 0.0
 
     def readout(self) -> str:
         message = [
             f"LA: {self.last_accel:.5f}",
             f"LD: {self.last_decel:.5f}",
             f"HP: {self.engine.horsepower(self.current_engine_rpm):.2f}",
+            f"Dist: {self.odometer_miles:.2f} miles",
             f"Gear: {self.current_gear}",
             f"Speed: {self.current_speed_mph:.2f} mph",
             f"TPS: {self.current_throttle:.2f}",
@@ -57,6 +59,9 @@ class Vehicle:
             self.current_speed_mph += accel + decel
 
             self.current_speed_mph = max(0, self.current_speed_mph)
+
+            # update the odometer
+            self.odometer_miles += (self.current_speed_mph / 3600) * self.tick_rate
 
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
 
