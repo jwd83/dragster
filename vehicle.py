@@ -4,10 +4,15 @@ from wheel import Wheel
 
 
 class Vehicle:
-    def __init__(self):
-        self.engine = Engine()
-        self.transmission = Transmission()
-        self.wheel = Wheel()
+    def __init__(
+        self,
+        engine: Engine = Engine(),
+        transmission: Transmission = Transmission(),
+        wheel: Wheel = Wheel(),
+    ):
+        self.engine = engine
+        self.transmission = transmission
+        self.wheel = wheel
         self.weight: float = 900.0  # kg
         self.ticks: int = 0
         self.current_gear: int = 1
