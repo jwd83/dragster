@@ -21,7 +21,15 @@ class Vehicle:
         self.air_density = 1.225  # kg/m^3
 
     def readout(self) -> str:
-        return f"Gear: {self.current_gear}, Speed: {self.current_speed_mph:.2f} mph, TPS: {self.current_throttle:.2f} RPM: {self.current_engine_rpm:.2f}, Ticks: {self.ticks} ({self.ticks * self.tick_rate:.4f} sec)"
+        message = [
+            f"HP: {self.engine.horsepower(self.current_engine_rpm):.2f}",
+            f"Gear: {self.current_gear}",
+            f"Speed: {self.current_speed_mph:.2f} mph",
+            f"TPS: {self.current_throttle:.2f}",
+            f"RPM: {self.current_engine_rpm:.1f}",
+            f"Ticks: {self.ticks} ({self.ticks * self.tick_rate:.4f} sec)",
+        ]
+        return ", ".join(message)
 
     def update(self):
         self.ticks += 1
@@ -62,14 +70,17 @@ class Vehicle:
         force = power_watts / speed_mps
 
         # Estimate drivetrain efficiency losses (~85%)
-        drivetrain_efficiency = 0.85
-        force *= drivetrain_efficiency
+        # drivetrain_efficiency = 0.85
+        # force *= drivetrain_efficiency/
 
         # Compute acceleration (a = F / m)
         acceleration_mps2 = force / self.weight
 
         # Convert m/s² to mph per tick
-        acceleration_mph = acceleration_mps2 * self.tick_rate * 2.23694
+        acceleration_mph = acceleration_mps2 * 2.23694
+
+        # Convert to mph per tick
+        acceleration_mph *= self.tick_rate
 
         return acceleration_mph
 
