@@ -57,3 +57,22 @@ if __name__ == "__main__":
     for i in range(0, 10000, 1000):
         print(f"Torque at {i} RPM:", engine.torque(i))
         print(f"Horsepower at {i} RPM:", engine.horsepower(i))
+
+    import matplotlib.pyplot as plt
+
+    import numpy as np
+
+    # make a plot of the torque and power curve vs rpm like a dyno chart
+
+    x = np.arange(0, engine.max_rpm + 500, 100)
+    y = np.array([engine.torque(i) for i in x])
+    y2 = np.array([engine.horsepower(i) for i in x])
+    plt.plot(x, y, label="Torque", color="blue")
+    plt.plot(x, y2, label="Horsepower", color="red")
+    plt.xlabel("RPM")
+    plt.ylabel("Torque / Horsepower")
+    plt.title("Torque and Horsepower Curve")
+    plt.legend()
+
+    plt.grid()
+    plt.show()

@@ -195,7 +195,7 @@ if __name__ == "__main__":
         if vehicle.ticks % 20 == 0:
             print(vehicle.readout())
 
-        if vehicle.current_engine_rpm > 7200:
+        if vehicle.current_engine_rpm > 7400:
             vehicle.current_gear += 1
 
         # if vehicle.current_speed_mph > 100:
