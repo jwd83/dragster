@@ -10,9 +10,9 @@ class Vehicle:
         transmission: Transmission = Transmission(),
         wheel: Wheel = Wheel(),
     ):
-        self.engine = engine
-        self.transmission = transmission
-        self.wheel = wheel
+        self.engine: Engine = engine
+        self.transmission: Transmission = transmission
+        self.wheel: Wheel = wheel
         self.weight: float = 900.0  # kg
         self.ticks: int = 0
         self.current_gear: int = 1
@@ -28,6 +28,7 @@ class Vehicle:
         self.last_accel = 0.0
         self.last_decel = 0.0
         self.odometer_miles: float = 0.0
+        self.max_gear = self.transmission.max_gear
 
     def readout(self) -> str:
         message = [
