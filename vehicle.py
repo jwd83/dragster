@@ -159,8 +159,8 @@ if __name__ == "__main__":
     print("Starting simulation...")
     print("-" * 80)
 
-    vehicle.current_gear = 5
-    vehicle.current_engine_rpm = 8000
+    vehicle.current_gear = 1
+    vehicle.current_engine_rpm = 1000
 
     vehicle.update()
     print(vehicle.readout())
@@ -175,14 +175,14 @@ if __name__ == "__main__":
     print(vehicle.readout())
 
     print("...")
-    while vehicle.current_speed_mph > 0 and vehicle.current_speed_mph < 39:
+    while vehicle.current_speed_mph > 0 and vehicle.current_speed_mph < 130:
         # if vehicle.ticks == 50:
         # vehicle.current_throttle = 0.0
-        # if vehicle.ticks % 100 == 0:
-        # print(vehicle.readout())
+        if vehicle.ticks % 20 == 0:
+            print(vehicle.readout())
 
-        # if vehicle.current_engine_rpm > 7500:
-        #     vehicle.current_gear += 1
+        if vehicle.current_engine_rpm > 7500:
+            vehicle.current_gear += 1
 
         # if vehicle.current_speed_mph > 100:
         #     vehicle.current_throttle = 0.0
