@@ -15,7 +15,7 @@ def main():
 
     vehicles = {
         "rally": cars.build_rally(),
-        "roku": cars.build_roku(),
+        "roku": cars.build_econobox(),
     }
 
     while True:

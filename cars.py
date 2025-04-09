@@ -2,7 +2,7 @@ from vehicle import Vehicle
 from engine import Engine
 
 
-def build_roku() -> Vehicle:
+def build_econobox() -> Vehicle:
 
     return Vehicle()
 
