@@ -72,6 +72,30 @@ def main():
             for record in data_log:
                 writer.writerow(record)
 
+    # generate a merged log of all vehicles prefixing their columns with the vehicle name
+    merged_log = []
+    for i in range(len(vehicles["rally"].log)):
+        merged_record = {}
+        for name, v in vehicles.items():
+            record = v.log[i]
+            for key, value in record.items():
+                merged_record[f"{name}_{key}"] = value
+        merged_log.append(merged_record)
+
+    # save the merged log to a file
+    with open(f"{folder_name}/merged.csv", "w") as f:
+        # get the field names from the first record
+        fieldnames = merged_log[0].keys()
+
+        # create a csv writer object
+        writer = DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
+
+        writer.writeheader()
+
+        # write the data to the csv file
+        for record in merged_log:
+            writer.writerow(record)
+
 
 if __name__ == "__main__":
     main()
