@@ -29,19 +29,29 @@ class Vehicle:
         self.last_decel = 0.0
         self.odometer_miles: float = 0.0
         self.max_gear = self.transmission.max_gear
+        self.logging = True
+        self.log = []
+
+    def log_record(self) -> dict:
+        return {
+            "Time": self.ticks * self.tick_rate,
+            "LA": self.last_accel,
+            "LD": self.last_decel,
+            "RPM": self.current_engine_rpm,
+            "Gear": self.current_gear,
+            "TPS": self.current_throttle,
+            "HP": self.engine.horsepower(self.current_engine_rpm),
+            "Speed": self.current_speed_mph,
+            "Distance": self.odometer_miles,
+            "Ticks": self.ticks,
+        }
 
     def readout(self) -> str:
-        message = [
-            f"LA: {self.last_accel:.5f}",
-            f"LD: {self.last_decel:.5f}",
-            f"HP: {self.engine.horsepower(self.current_engine_rpm):.2f}",
-            f"Dist: {self.odometer_miles:.2f} miles",
-            f"Gear: {self.current_gear}",
-            f"Speed: {self.current_speed_mph:.2f} mph",
-            f"TPS: {self.current_throttle:.2f}",
-            f"RPM: {self.current_engine_rpm:.1f}",
-            f"Ticks: {self.ticks} ({self.ticks * self.tick_rate:.4f} sec)",
-        ]
+
+        message = []
+        for key, value in self.log_record().items():
+            message.append(f"{key}: {value}")
+
         return ", ".join(message)
 
     def update(self):
@@ -65,6 +75,12 @@ class Vehicle:
             self.odometer_miles += (self.current_speed_mph / 3600) * self.tick_rate
 
             self.current_engine_rpm = self.engine_rpm_from_speed_and_gear()
+
+        if self.logging:
+            self.log.append(self.log_record())
+        else:
+            # clear the log if not logging
+            self.log = []
 
     def calculate_acceleration(self) -> float:
         # calculate and return the acceleration of the vehicle

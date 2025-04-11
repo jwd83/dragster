@@ -1,6 +1,9 @@
 from vehicle import Vehicle
 import cars
 from transmission import Transmission
+import datetime
+import os
+from csv import DictWriter
 
 
 def print_readout(vehicles: dict[Vehicle]):
@@ -46,6 +49,28 @@ def main():
 
     print_readout(vehicles)
     print("All vehicles have completed the quarter mile.")
+
+    # make a timestamped folder inside ./logs
+    folder_name = f"logs/{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
+    os.makedirs(folder_name, exist_ok=True)
+    print("Saving logs to:", folder_name)
+    for name, v in vehicles.items():
+        # save the readout to a file
+        print(f"Saving {name} log of length {len(v.log)} to {folder_name}/{name}.csv")
+        with open(f"{folder_name}/{name}.csv", "w") as f:
+            data_log = v.log
+
+            # get the field names from the first record
+            fieldnames = data_log[0].keys()
+
+            # create a csv writer object
+            writer = DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
+
+            writer.writeheader()
+
+            # write the data to the csv file
+            for record in data_log:
+                writer.writerow(record)
 
 
 if __name__ == "__main__":
