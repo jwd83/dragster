@@ -21,6 +21,7 @@ def build_rally() -> Vehicle:
                 (6800, 200),  # 6800 rpm, 200 ft-lb, turbo fade
                 (6950, 11),
                 (7000, 0),  # 7000 rpm fuel cutoff
-            ]
+            ],
+            shift_rpm=6820,
         )
     )

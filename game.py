@@ -31,7 +31,7 @@ def main():
 
         # check if any engine needs to be shifted up (shift at engine rpm above 6800)
         for _, v in vehicles.items():
-            if v.current_engine_rpm > 6800:
+            if v.current_engine_rpm > v.engine.shift_rpm:
                 v.current_gear += 1
 
                 # dont try to shift out of the max gear

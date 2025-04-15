@@ -20,6 +20,7 @@ class Engine:
             (7350, 84),
             (7500, 0),
         ],
+        shift_rpm: int = 7350,
     ):
         self.torque_curve = torque_curve.copy()
         self.max_rpm = max(torque[0] for torque in torque_curve)
@@ -28,6 +29,7 @@ class Engine:
         self.max_horsepower = max(
             (torque[1] * torque[0]) / 5252 for torque in torque_curve
         )
+        self.shift_rpm = shift_rpm
 
     def torque(self, rpm: float):
         # Interpolate the torque value based on the RPM
