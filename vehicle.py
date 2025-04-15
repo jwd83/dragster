@@ -17,7 +17,7 @@ class Vehicle:
         self.ticks: int = 0
         self.current_gear: int = 1
         self.current_speed_mph = 0.0
-        self.current_engine_rpm = self.engine.min_rpm
+        self.current_engine_rpm = self.engine.launch_rpm
         self.current_throttle = 0.0
         self.tick_rate = 1 / 60  # simulation rate (Hz)
         self.drag_coefficient = 0.3
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     print("-" * 80)
 
     vehicle.current_gear = 1
-    vehicle.current_engine_rpm = 1000
+    vehicle.current_engine_rpm = vehicle.engine.launch_rpm
 
     vehicle.update()
     print(vehicle.readout())
@@ -212,7 +212,7 @@ if __name__ == "__main__":
         if vehicle.ticks % 20 == 0:
             print(vehicle.readout())
 
-        if vehicle.current_engine_rpm > 7400:
+        if vehicle.current_engine_rpm > vehicle.engine.shift_rpm:
             vehicle.current_gear += 1
 
         # if vehicle.current_speed_mph > 100:
