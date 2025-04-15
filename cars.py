@@ -4,6 +4,7 @@ Cars are named after birds of colors that they resemble.
 
 econobox - puffin (black and white)
 rally car - blue jay (blue)
+sport car - goldfinch (yellow)
 supercar - cardinal (red)
 formula - red-headed woodpecker (red and white)
 funny - painted bunting (red and blue)
