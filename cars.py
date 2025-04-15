@@ -36,6 +36,10 @@ def build_class_a() -> Vehicle:
             [(1000, 3000), (5000, 2000), (5500, 0)],
             shift_rpm=5000,
         ),
-        Transmission([4.4, 2.2, 1, 0.8, 0.6, 0.5, 0.3, 0.25], 0.4, 1),
+        Transmission(
+            forward_gears=[3.6, 1.8, 1.4, 1, 0.8],
+            reverse_gear=0.4,
+            final_drive=2.5,
+        ),
         Wheel(50.0),
     )
