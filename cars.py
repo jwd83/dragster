@@ -1,5 +1,7 @@
 from vehicle import Vehicle
 from engine import Engine
+from transmission import Transmission
+from wheel import Wheel
 
 
 def build_econobox() -> Vehicle:
@@ -24,4 +26,16 @@ def build_rally() -> Vehicle:
             ],
             shift_rpm=6820,
         )
+    )
+
+
+def build_class_a() -> Vehicle:
+
+    return Vehicle(
+        Engine(
+            [(1000, 3000), (5000, 2000), (5500, 0)],
+            shift_rpm=5000,
+        ),
+        Transmission([4.4, 2.2, 1, 0.8, 0.6, 0.5, 0.3, 0.25], 0.4, 1),
+        Wheel(50.0),
     )
