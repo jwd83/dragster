@@ -1,3 +1,17 @@
+"""
+
+Cars are named after birds of colors that they resemble.
+
+rally car - blue jay (blue)
+econobox - puffin (black and white)
+supercar - cardinal (red)
+formula - ()
+funny - painted bunting (red and blue)
+top fuel - common grackle (black and green)
+
+
+"""
+
 from vehicle import Vehicle
 from engine import Engine
 from transmission import Transmission
