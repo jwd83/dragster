@@ -25,7 +25,7 @@ class Vehicle:
         self.current_engine_rpm = self.engine.launch_rpm
         self.current_throttle = 0.0
         self.tick_rate = 1 / 60  # simulation rate (Hz)
-        self.drag_coefficient = 0.3
+        self.drag_coefficient = 0.7
         self.rolling_resistance = 0.015
         self.frontal_area = 2.0  # m^2
         self.air_density = 1.225  # kg/m^3
