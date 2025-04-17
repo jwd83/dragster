@@ -4,8 +4,8 @@ Cars are named after birds of colors that they resemble.
 
 econobox - puffin (black and white)
 rally car - blue jay (blue)
-sport car - goldfinch (yellow)
-supercar - cardinal (red)
+sport car - goldfinch (yellow) 460hp, 2500lb
+supercar - cardinal (red) 475hp 2400lb
 formula - red-headed woodpecker (red and white)
 funny - painted bunting (red and blue)
 top fuel - common grackle (black and green)
