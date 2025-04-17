@@ -17,9 +17,10 @@ def print_readout(vehicles: dict[Vehicle]):
 def main():
 
     vehicles = {
-        "rally": cars.build_rally(),
-        "econobox": cars.build_econobox(),
-        "class_a": cars.build_class_a(),
+        "puffin": cars.puffin(),
+        "blue_jay": cars.blue_jay(),
+        "cardinal": cars.cardinal(),
+        "painted_bunting": cars.painted_bunting(),
     }
 
     while True:
@@ -27,10 +28,10 @@ def main():
             v.update()
             v.current_throttle = 1.0  # Full throttle
 
-        if vehicles["rally"].ticks % 20 == 0:
+        if vehicles["blue_jay"].ticks % 20 == 0:
             print_readout(vehicles)
 
-        # check if any engine needs to be shifted up (shift at engine rpm above 6800)
+        # check if any engine needs to be shifted up
         for _, v in vehicles.items():
             if v.current_engine_rpm > v.engine.shift_rpm:
                 v.current_gear += 1
@@ -75,7 +76,7 @@ def main():
 
     # generate a merged log of all vehicles prefixing their columns with the vehicle name
     merged_log = []
-    for i in range(len(vehicles["rally"].log)):
+    for i in range(len(vehicles["blue_jay"].log)):
         merged_record = {}
         for name, v in vehicles.items():
             record = v.log[i]

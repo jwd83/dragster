@@ -19,12 +19,12 @@ from transmission import Transmission
 from wheel import Wheel
 
 
-def build_econobox() -> Vehicle:
+def puffin() -> Vehicle:
 
     return Vehicle()
 
 
-def build_rally() -> Vehicle:
+def blue_jay() -> Vehicle:
 
     return Vehicle(
         Engine(
@@ -45,7 +45,7 @@ def build_rally() -> Vehicle:
     )
 
 
-def build_class_a() -> Vehicle:
+def painted_bunting() -> Vehicle:
 
     return Vehicle(
         Engine(
@@ -58,4 +58,27 @@ def build_class_a() -> Vehicle:
             final_drive=2.4,
         ),
         Wheel(50.0),
+    )
+
+
+def cardinal() -> Vehicle:
+
+    return Vehicle(
+        Engine(
+            [
+                (1000, 100),
+                (2000, 200),
+                (2500, 300),
+                (3000, 440),
+                (5252, 450),
+                (6000, 420),
+                (6500, 399),
+                (6750, 300),
+                (7000, 0),
+            ],
+            shift_rpm=6500,
+            launch_rpm=1500,
+        ),
+        Transmission(forward_gears=[2.76, 1.7, 1.24, 1, 0.77], final_drive=2.88),
+        Wheel(diameter_inches=26.2),
     )
