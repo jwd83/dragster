@@ -43,6 +43,7 @@ def blue_jay() -> Vehicle:
             launch_rpm=2400,
         ),
         weight_lbs=2800,
+        drivetrain_efficiency=0.82,
     )
 
 
@@ -84,4 +85,6 @@ def cardinal() -> Vehicle:
         Transmission(forward_gears=[2.76, 1.7, 1.24, 1, 0.77], final_drive=2.88),
         Wheel(diameter_inches=26.2),
         weight_lbs=2400,
+        drag_coefficient=0.4,
+        drivetrain_efficiency=0.87,
     )

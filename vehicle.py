@@ -13,23 +13,25 @@ class Vehicle:
         transmission: Transmission = Transmission(),
         wheel: Wheel = Wheel(),
         weight_lbs: float = 900.0 * KG_TO_LBS,
+        drag_coefficient: float = 0.7,
+        drivetrain_efficiency: float = 0.85,
     ):
         self.engine: Engine = engine
         self.transmission: Transmission = transmission
         self.wheel: Wheel = wheel
         self.weight_lbs: float = weight_lbs
         self.weight_kg: float = self.weight_lbs / KG_TO_LBS
+        self.drag_coefficient = drag_coefficient
+        self.drivetrain_efficiency = drivetrain_efficiency
         self.ticks: int = 0
         self.current_gear: int = 1
         self.current_speed_mph = 0.0
         self.current_engine_rpm = self.engine.launch_rpm
         self.current_throttle = 0.0
         self.tick_rate = 1 / 60  # simulation rate (Hz)
-        self.drag_coefficient = 0.7
         self.rolling_resistance = 0.015
         self.frontal_area = 2.0  # m^2
         self.air_density = 1.225  # kg/m^3
-        self.drivetrain_efficiency = 0.85
         self.last_accel = 0.0
         self.last_decel = 0.0
         self.odometer_miles: float = 0.0
