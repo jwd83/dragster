@@ -47,6 +47,10 @@ def blue_jay() -> Vehicle:
     )
 
 
+def budgie() -> Vehicle:
+    pass
+
+
 def painted_bunting() -> Vehicle:
 
     return Vehicle(
