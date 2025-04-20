@@ -48,7 +48,13 @@ def blue_jay() -> Vehicle:
 
 
 def budgie() -> Vehicle:
-    pass
+    rb_engine = Engine([(1000, 300), (14500, 360)])
+    rb_engine_ev = Engine([(1000, 300), (5252, 600), (14500, 434)])
+    vk_engine = Engine(
+        [(1000, 300), (10500, 500), (11100, 400), (11101, 0)]
+    )  # fuel cut at >= 11,101 RPM
+
+    return Vehicle(Engine([(1000, 300), (14500, 360)]))
 
 
 def painted_bunting() -> Vehicle:
