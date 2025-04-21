@@ -29,7 +29,7 @@ class Wheel:
 
             """
             tire_tread_width_mm = tire_spec[0]
-            tire_ratio = tire_spec[1]
+            tire_ratio = float(tire_spec[1]) / 100.0
             tire_wheel_diameter_in = tire_spec[2]
 
             tire_sidewall_mm = tire_ratio * tire_tread_width_mm
@@ -57,6 +57,8 @@ class Wheel:
 
 
 def wheel_report(wheel: Wheel) -> str:
+
+    print("-" * 40)
     print("Diameter in inches:", wheel.get_diameter_inches())
 
     for i in range(0, 1000, 100):
@@ -77,5 +79,4 @@ if __name__ == "__main__":
 
     wheel_report(wheel)
 
-    print()
     wheel_report(wheel2)
