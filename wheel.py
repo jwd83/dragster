@@ -76,7 +76,9 @@ if __name__ == "__main__":
     # Example usage
     wheel = Wheel()
     wheel2 = Wheel((205, 55, 16))
+    wheel3 = Wheel((335, 35, 17))
 
     wheel_report(wheel)
 
     wheel_report(wheel2)
+    wheel_report(wheel3)
