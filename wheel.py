@@ -2,7 +2,7 @@ import math
 
 
 class Wheel:
-    def __init__(self, tire_spec: float | tuple = 22.7):
+    def __init__(self, tire_spec: float | tuple = (185, 60, 14)):
 
         # check if we were provided a float or a tuple
 
@@ -56,7 +56,13 @@ class Wheel:
         return speed_mph / self.__rpm_to_mph_ratio
 
 
-def wheel_report(wheel: Wheel) -> str:
+def wheel_report(wheel: Wheel, title: str | None = None) -> str:
+
+    if title is None:
+        title = "Unknown wheel"
+
+    print("-" * 40)
+    print(f"Wheel Report: {title}")
 
     print("-" * 40)
     print("Diameter in inches:", wheel.get_diameter_inches())
@@ -66,19 +72,15 @@ def wheel_report(wheel: Wheel) -> str:
             f"Speed at {i} rpm: {wheel.speed_mph(i):.1f} mph",
         )
 
-    for i in range(0, 100, 10):
+    for i in range(0, 200, 25):
         print(
             f"RPM at {i} mph: {int(wheel.rpm_from_speed(i))} rpm",
         )
 
 
 if __name__ == "__main__":
-    # Example usage
-    wheel = Wheel()
-    wheel2 = Wheel((205, 55, 16))
-    wheel3 = Wheel((335, 35, 17))
 
-    wheel_report(wheel)
-
-    wheel_report(wheel2)
-    wheel_report(wheel3)
+    wheel_report(Wheel(), "AE86")
+    wheel_report(Wheel((335, 35, 17)), "F40")  # f40
+    wheel_report(Wheel((235, 40, 17)), "22B")  # 22b
+    wheel_report(Wheel((325, 30, 21)), "Valkyrie")  # evo
