@@ -81,6 +81,6 @@ def wheel_report(wheel: Wheel, title: str | None = None) -> str:
 if __name__ == "__main__":
 
     wheel_report(Wheel(), "AE86")
-    wheel_report(Wheel((335, 35, 17)), "F40")  # f40
-    wheel_report(Wheel((235, 40, 17)), "22B")  # 22b
-    wheel_report(Wheel((325, 30, 21)), "Valkyrie")  # evo
+    wheel_report(Wheel((335, 35, 17)), "F40")
+    wheel_report(Wheel((235, 40, 17)), "22B")
+    wheel_report(Wheel((325, 30, 21)), "Valkyrie Rear")
