@@ -67,7 +67,7 @@ def wheel_report(wheel: Wheel, title: str | None = None) -> str:
     print("-" * 40)
     print("Diameter in inches:", wheel.get_diameter_inches())
 
-    for i in range(0, 1000, 100):
+    for i in range(0, 2000, 250):
         print(
             f"Speed at {i} rpm: {wheel.speed_mph(i):.1f} mph",
         )
