@@ -54,7 +54,14 @@ def budgie() -> Vehicle:
         [(1000, 300), (10500, 500), (11100, 400), (11101, 0)]
     )  # fuel cut at >= 11,101 RPM
 
-    return Vehicle(Engine([(1000, 300), (14500, 360)]))
+    return Vehicle(
+        vk_engine,
+        Transmission(),
+        Wheel((325, 30, 21)),
+        weight=2000,
+        drag_coefficient=0.28,
+        drivetrain_efficiency=0.89,
+    )
 
 
 def painted_bunting() -> Vehicle:
