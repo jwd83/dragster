@@ -48,18 +48,33 @@ def blue_jay() -> Vehicle:
 
 
 def budgie() -> Vehicle:
-    rb_engine = Engine([(1000, 300), (14500, 360)])
-    rb_engine_ev = Engine([(1000, 300), (5252, 600), (14500, 434)])
-    vk_engine = Engine(
-        [(1000, 300), (10500, 500), (11100, 400), (11101, 0)]
+
+    budgie_engine = Engine(
+        torque_curve=[
+            (1000, 300),
+            (575, 7000),
+            (10500, 500),
+            (11100, 400),
+            (11101, 0),
+        ],
+        shift_rpm=10500,
+        launch_rpm=3000,
     )  # fuel cut at >= 11,101 RPM
 
+    budgie_transmission = Transmission(
+        forward_gears=[3.6, 2.1, 1.4, 1, 0.88, 0.8],
+        reverse_gear=4,
+        final_drive=2.9,
+    )
+
+    budgie_wheel = Wheel((325, 30, 21))
+
     return Vehicle(
-        vk_engine,
-        Transmission(),
-        Wheel((325, 30, 21)),
-        weight=2000,
-        drag_coefficient=0.28,
+        budgie_engine,
+        budgie_transmission,
+        budgie_wheel,
+        weight_lbs=2990,
+        drag_coefficient=0.38,
         drivetrain_efficiency=0.89,
     )
 

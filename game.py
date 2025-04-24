@@ -21,6 +21,7 @@ def main():
         "blue_jay": cars.blue_jay(),
         "cardinal": cars.cardinal(),
         "painted_bunting": cars.painted_bunting(),
+        "budgie": cars.budgie(),
     }
 
     while True:
