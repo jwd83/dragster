@@ -74,7 +74,7 @@ def budgie() -> Vehicle:
         budgie_transmission,
         budgie_wheel,
         weight_lbs=2990,
-        drag_coefficient=0.6,
+        drag_coefficient=0.45,
         drivetrain_efficiency=0.89,
     )
 
