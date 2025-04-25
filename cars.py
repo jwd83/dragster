@@ -52,13 +52,13 @@ def budgie() -> Vehicle:
     budgie_engine = Engine(
         torque_curve=[
             (1000, 300),
-            (575, 7000),
+            (2000, 400),
             (10500, 500),
             (11100, 400),
             (11101, 0),
         ],
         shift_rpm=10500,
-        launch_rpm=3000,
+        launch_rpm=1400,
     )  # fuel cut at >= 11,101 RPM
 
     budgie_transmission = Transmission(
@@ -74,7 +74,7 @@ def budgie() -> Vehicle:
         budgie_transmission,
         budgie_wheel,
         weight_lbs=2990,
-        drag_coefficient=0.38,
+        drag_coefficient=0.6,
         drivetrain_efficiency=0.89,
     )
 
