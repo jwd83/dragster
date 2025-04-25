@@ -20,8 +20,8 @@ def main():
         "puffin": cars.puffin(),
         "blue_jay": cars.blue_jay(),
         "cardinal": cars.cardinal(),
-        "painted_bunting": cars.painted_bunting(),
         "budgie": cars.budgie(),
+        "painted_bunting": cars.painted_bunting(),
     }
 
     while True:
@@ -44,14 +44,37 @@ def main():
         all_done = True
 
         for _, v in vehicles.items():
-            if v.odometer_miles < 0.25:
+            if v.odometer_miles < 1:
                 all_done = False
 
         if all_done:
             break
 
     print_readout(vehicles)
-    print("All vehicles have completed the quarter mile.")
+    print("All vehicles have completed the race.")
+
+    quarter_mile_results = {}
+    standing_mile_results = {}
+
+    for name, v in vehicles.items():
+        for record in v.log:
+            if record["Distance"] >= 1:
+                standing_mile_results[name] = record
+                break
+
+        for record in v.log:
+            if record["Distance"] >= 0.25:
+                quarter_mile_results[name] = record
+                break
+
+    print("\n" + "*" * 80 + "\nQUARTER MILE:" + "\n" + "-" * 80)
+    for name, record in quarter_mile_results.items():
+        print(f"{name:<20} -  {record['Time']:.3f} @ {record['Speed']:.1f} mph")
+
+    print("\n" + "*" * 80 + "\nSTANDING MILE:" + "\n" + "-" * 80)
+    for name, record in standing_mile_results.items():
+        print(f"{name:<20} -  {record['Time']:.3f} @ {record['Speed']:.1f} mph")
+    print("*" * 80)
 
     # make a timestamped folder inside ./logs
     folder_name = f"logs/{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
@@ -59,7 +82,7 @@ def main():
     print("Saving logs to:", folder_name)
     for name, v in vehicles.items():
         # save the readout to a file
-        print(f"Saving {name} log of length {len(v.log)} to {folder_name}/{name}.csv")
+        # print(f"Saving {name} log of length {len(v.log)} to {folder_name}/{name}.csv")
         with open(f"{folder_name}/{name}.csv", "w") as f:
             data_log = v.log
 
