@@ -62,9 +62,9 @@ def budgie() -> Vehicle:
     )  # fuel cut at >= 11,101 RPM
 
     budgie_transmission = Transmission(
-        forward_gears=[3.6, 2.1, 1.4, 1, 0.88, 0.8],
+        forward_gears=[3.6, 2.1, 1.4, 1.2, 1, 0.91, 0.85, 0.8],
         reverse_gear=4,
-        final_drive=2.9,
+        final_drive=4,
     )
 
     budgie_wheel = Wheel((325, 30, 21))
@@ -74,7 +74,7 @@ def budgie() -> Vehicle:
         budgie_transmission,
         budgie_wheel,
         weight_lbs=2990,
-        drag_coefficient=0.45,
+        drag_coefficient=0.17,
         drivetrain_efficiency=0.89,
     )
 
@@ -83,8 +83,7 @@ def painted_bunting() -> Vehicle:
 
     return Vehicle(
         Engine(
-            [(1000, 3000), (5000, 2000), (5500, 0)],
-            shift_rpm=5000,
+            [(1000, 3000), (5000, 7400), (5500, 0)], shift_rpm=5000, launch_rpm=1000
         ),
         Transmission(
             forward_gears=[3.6, 1.8, 1.4, 1],
