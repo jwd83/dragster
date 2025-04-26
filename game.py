@@ -29,8 +29,8 @@ def main():
             v.update()
             v.current_throttle = 1.0  # Full throttle
 
-        if vehicles["blue_jay"].ticks % 20 == 0:
-            print_readout(vehicles)
+        # if vehicles["blue_jay"].ticks % 20 == 0:
+        #     print_readout(vehicles)
 
         # check if any engine needs to be shifted up
         for _, v in vehicles.items():
@@ -44,19 +44,25 @@ def main():
         all_done = True
 
         for _, v in vehicles.items():
-            if v.odometer_miles < 1:
+            if v.odometer_miles < 5:
                 all_done = False
 
         if all_done:
             break
 
-    print_readout(vehicles)
+    # print_readout(vehicles)
     print("All vehicles have completed the race.")
 
     quarter_mile_results = {}
     standing_mile_results = {}
+    five_mile_results = {}
 
     for name, v in vehicles.items():
+        for record in v.log:
+            if record["Distance"] >= 5:
+                five_mile_results[name] = record
+                break
+
         for record in v.log:
             if record["Distance"] >= 1:
                 standing_mile_results[name] = record
@@ -74,6 +80,11 @@ def main():
     print("\n" + "*" * 80 + "\nSTANDING MILE:" + "\n" + "-" * 80)
     for name, record in standing_mile_results.items():
         print(f"{name:<20} -  {record['Time']:.3f} @ {record['Speed']:.1f} mph")
+
+    print("\n" + "*" * 80 + "\nFIVE MILE:" + "\n" + "-" * 80)
+    for name, record in five_mile_results.items():
+        print(f"{name:<20} -  {record['Time']:.3f} @ {record['Speed']:.1f} mph")
+
     print("*" * 80)
 
     # make a timestamped folder inside ./logs
