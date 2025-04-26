@@ -13,7 +13,7 @@ class Vehicle:
         transmission: Transmission = Transmission(),
         wheel: Wheel = Wheel(),
         weight_lbs: float = 900.0 * KG_TO_LBS,
-        drag_coefficient: float = 0.7,
+        drag_coefficient: float = 0.74,
         drivetrain_efficiency: float = 0.85,
     ):
         self.engine: Engine = engine
