@@ -61,21 +61,23 @@ def wheel_report(wheel: Wheel, title: str | None = None) -> str:
     if title is None:
         title = "Unknown wheel"
 
-    print("-" * 40)
+    print("*" * 60)
     print(f"Wheel Report: {title}")
 
     print("-" * 40)
-    print("Diameter in inches:", wheel.get_diameter_inches())
+    print(f"Tire Diameter: {wheel.get_diameter_inches():.2f} in.")
+    print("-" * 40)
 
     for i in range(0, 2000, 250):
-        print(
-            f"Speed at {i} rpm: {wheel.speed_mph(i):.1f} mph",
-        )
+        entry = f"Speed at {i} rpm"
+        value = f"{wheel.speed_mph(i):.1f} MPH"
+        print(f"{entry:<20} --> {value:>12}")
+    print("-" * 40)
 
     for i in range(0, 200, 25):
-        print(
-            f"RPM at {i} mph: {int(wheel.rpm_from_speed(i))} rpm",
-        )
+        entry = f"Wheel RPM at {i} MPH"
+        value = f"{wheel.rpm_from_speed(i):.1f} RPM"
+        print(f"{entry:<22} --> {value:>12}")
 
 
 if __name__ == "__main__":
@@ -87,3 +89,4 @@ if __name__ == "__main__":
     wheel_report(Wheel((325, 30, 21)), "Valkyrie Rear")
     wheel_report(Wheel((235, 35, 19)), "RB17")
     wheel_report(Wheel((440, 60, 16)), "Funny/TopFuel:Rear")
+    wheel_report(Wheel((405, 32, 18)), "F1:Rear")
