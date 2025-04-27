@@ -86,3 +86,4 @@ if __name__ == "__main__":
     wheel_report(Wheel((235, 40, 17)), "22B")
     wheel_report(Wheel((325, 30, 21)), "Valkyrie Rear")
     wheel_report(Wheel((235, 35, 19)), "RB17")
+    wheel_report(Wheel((440, 60, 16)), "Funny/TopFuel:Rear")
