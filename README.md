@@ -6,3 +6,4 @@ game.py - simulation of 2 cars now
 
 # TODO
 randomized ai shift points for game
+randomize launch rpm
