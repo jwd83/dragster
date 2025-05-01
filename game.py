@@ -14,6 +14,19 @@ def print_readout(vehicles: dict[Vehicle]):
     print(",".join(entries))
 
 
+def print_race_results(title: str, results):
+
+    print("\n" + "*" * 80 + f"\n{title}:" + "\n" + "-" * 80)
+    for name, record in results.items():
+        f_timing = f"{record['Time']:.3f}"
+        f_timing = f"{f_timing:>8}"
+
+        f_speed = f"{record['Speed']:.1f}"
+        f_speed = f"{f_speed:>6}"
+
+        print(f"{name:<20} -  {f_timing} sec  @ {f_speed} mph")
+
+
 def main():
 
     vehicles = {
@@ -73,17 +86,9 @@ def main():
                 quarter_mile_results[name] = record
                 break
 
-    print("\n" + "*" * 80 + "\nQUARTER MILE:" + "\n" + "-" * 80)
-    for name, record in quarter_mile_results.items():
-        print(f"{name:<20} -  {record['Time']:.3f} @ {record['Speed']:.1f} mph")
-
-    print("\n" + "*" * 80 + "\nSTANDING MILE:" + "\n" + "-" * 80)
-    for name, record in standing_mile_results.items():
-        print(f"{name:<20} -  {record['Time']:.3f} @ {record['Speed']:.1f} mph")
-
-    print("\n" + "*" * 80 + "\nFIVE MILE:" + "\n" + "-" * 80)
-    for name, record in five_mile_results.items():
-        print(f"{name:<20} -  {record['Time']:.3f} @ {record['Speed']:.1f} mph")
+    print_race_results("QUARTER MILE", quarter_mile_results)
+    print_race_results("STANDING MILE", standing_mile_results)
+    print_race_results("FIVE MILE", five_mile_results)
 
     print("*" * 80)
 
