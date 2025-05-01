@@ -9,4 +9,4 @@ game.py - simulation of 2 cars now
 randomized ai shift points for game
 randomize launch rpm
 add wind conditions
-randomize wind conidtions
+randomize wind conditions
