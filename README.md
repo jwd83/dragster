@@ -1,12 +1,12 @@
-simulating drag racing
+# Dragster
 
-game.py - simulation of 2 cars now
+A simple drag racing game made in Python using Pygame.
 
-# simulating drag racing
+## Overview
 
-# TODO
+## TODO
 
-randomized ai shift points for game
-randomize launch rpm
-add wind conditions
-randomize wind conditions
+* randomized ai shift points for game
+* randomize launch rpm
+* add wind conditions
+* randomize wind conditions
