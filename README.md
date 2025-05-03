@@ -10,3 +10,4 @@ A simple drag racing game made in Python using Pygame.
 * randomize launch rpm
 * add wind conditions
 * randomize wind conditions
+* add tire slip curve
