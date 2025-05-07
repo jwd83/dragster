@@ -2,29 +2,36 @@ from engine import Engine
 from transmission import Transmission
 from wheel import Wheel
 
+KG_TO_LBS: float = 2.20462
+
 
 class Vehicle:
+
     def __init__(
         self,
         engine: Engine = Engine(),
         transmission: Transmission = Transmission(),
         wheel: Wheel = Wheel(),
+        weight_lbs: float = 900.0 * KG_TO_LBS,
+        drag_coefficient: float = 0.74,
+        drivetrain_efficiency: float = 0.85,
     ):
         self.engine: Engine = engine
         self.transmission: Transmission = transmission
         self.wheel: Wheel = wheel
-        self.weight: float = 900.0  # kg
+        self.weight_lbs: float = weight_lbs
+        self.weight_kg: float = self.weight_lbs / KG_TO_LBS
+        self.drag_coefficient = drag_coefficient
+        self.drivetrain_efficiency = drivetrain_efficiency
         self.ticks: int = 0
         self.current_gear: int = 1
         self.current_speed_mph = 0.0
-        self.current_engine_rpm = self.engine.min_rpm
+        self.current_engine_rpm = self.engine.launch_rpm
         self.current_throttle = 0.0
         self.tick_rate = 1 / 60  # simulation rate (Hz)
-        self.drag_coefficient = 0.3
         self.rolling_resistance = 0.015
         self.frontal_area = 2.0  # m^2
         self.air_density = 1.225  # kg/m^3
-        self.drivetrain_efficiency = 0.85
         self.last_accel = 0.0
         self.last_decel = 0.0
         self.odometer_miles: float = 0.0
@@ -111,7 +118,7 @@ class Vehicle:
             # force *= drivetrain_efficiency/
 
             # Compute acceleration (a = F / m)
-            acceleration_mps2 = force / self.weight
+            acceleration_mps2 = force / self.weight_kg
 
             # Convert m/s² to mph per tick
             acceleration_mph = acceleration_mps2 * 2.23694
@@ -134,7 +141,7 @@ class Vehicle:
             dv (float): Change in speed over the time step (will be negative or zero)
         """
         # unit conversions
-        mass = self.weight  # kg
+        mass = self.weight_kg  # kg
         Ad = 1.225  # kg/m^3 (standard air density at sea level)
         iv = self.current_speed_mph * 0.44704  # Convert mph to m/s
         g = 9.81  # m/s^2 (gravity)
@@ -187,7 +194,7 @@ if __name__ == "__main__":
     print("-" * 80)
 
     vehicle.current_gear = 1
-    vehicle.current_engine_rpm = 1000
+    vehicle.current_engine_rpm = vehicle.engine.launch_rpm
 
     vehicle.update()
     print(vehicle.readout())
@@ -212,7 +219,7 @@ if __name__ == "__main__":
         if vehicle.ticks % 20 == 0:
             print(vehicle.readout())
 
-        if vehicle.current_engine_rpm > 7400:
+        if vehicle.current_engine_rpm > vehicle.engine.shift_rpm:
             vehicle.current_gear += 1
 
         # if vehicle.current_speed_mph > 100:
